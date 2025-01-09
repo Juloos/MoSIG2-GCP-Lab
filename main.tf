@@ -63,29 +63,3 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
     machine_type = var.machine_type
   }
 }
-
-
-# Based on microservices-demo/terraform/main.tf
-
-# Apply YAML kubernetes-manifest configurations
-resource "null_resource" "apply_deployment" {
-  provisioner "local-exec" {
-    interpreter = ["bash", "-exc"]
-    command     = "kubectl apply -f ./kubernetes-manifests.yaml"
-  }
-}
-
-# Wait condition for all Pods to be ready before finishing
-resource "null_resource" "wait_conditions" {
-  provisioner "local-exec" {
-    interpreter = ["bash", "-exc"]
-    command     = <<-EOT
-    kubectl wait --for=condition=AVAILABLE apiservice/v1beta1.metrics.k8s.io --timeout=180s
-    kubectl wait --for=condition=ready pods --all --timeout=280s
-    EOT
-  }
-
-  depends_on = [
-    resource.null_resource.apply_deployment
-  ]
-}
