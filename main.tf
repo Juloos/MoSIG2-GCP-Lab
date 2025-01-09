@@ -35,12 +35,13 @@ variable "node_count" {
 
 
 provider "google" {
-  project = var.project_id
-  zone    = var.region
+  project  = var.project_id
+  region   = var.region
 }
 
 resource "google_container_cluster" "primary" {
   name                     = var.name
+  location                 = var.region
   deletion_protection      = false
   # Original comment:
   # We can't create a cluster with no node pool defined, but we want to only use
@@ -52,7 +53,7 @@ resource "google_container_cluster" "primary" {
 
 resource "google_container_node_pool" "primary_preemptible_nodes" {
   name       = "preemptible-pool"
-  cluster    = var.name
+  cluster    = google_container_cluster.primary.name
   node_count = var.node_count
 
   # Node pools are created and managed as separate resources to allow
