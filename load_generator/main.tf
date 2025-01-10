@@ -39,7 +39,7 @@ resource "google_compute_instance" "vm_instance" {
   count        = 1
   machine_type = var.machine_type
 
-  tags = ["webUI"]
+  tags = ["webui"]
 
   boot_disk {
     initialize_params {
@@ -67,7 +67,7 @@ resource "google_compute_firewall" "default" {
  }
 
  source_ranges = ["0.0.0.0/0"]
- target_tags = ["webUI"]
+ target_tags = ["webui"]
 }
 
 // A variable for extracting the external ip of the instance
