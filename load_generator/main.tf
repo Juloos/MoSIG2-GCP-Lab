@@ -39,6 +39,8 @@ resource "google_compute_instance" "vm_instance" {
   count        = 1
   machine_type = var.machine_type
 
+  tags = ["webUI"]
+
   boot_disk {
     initialize_params {
       image = "ubuntu-os-cloud/ubuntu-2204-lts"
@@ -49,6 +51,23 @@ resource "google_compute_instance" "vm_instance" {
     network = "default"
     access_config {}
   }
+}
+
+resource "google_compute_firewall" "default" {
+ name    = "load_generator_firewall"
+ network = "default"
+
+ allow {
+   protocol = "icmp"
+ }
+
+ allow {
+   protocol = "tcp"
+   ports    = ["8089"]
+ }
+
+ source_ranges = ["0.0.0.0/0"]
+ target_tags = ["webUI"]
 }
 
 // A variable for extracting the external ip of the instance
