@@ -2,4 +2,4 @@
 
 cd $(dirname $0)
 
-ansible-playbook -i host locust_config.yaml
+yes | python3 -m ansible playbook -i host locust_config.yaml
