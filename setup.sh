@@ -17,6 +17,7 @@ fi
 
 cd ../load_generator
 terraform init
+cd ..
 
 pip3 install ansible
 
