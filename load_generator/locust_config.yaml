@@ -88,8 +88,7 @@
           from locust import HttpUser, task, between
 
           class QuickstartUser(HttpUser):
-            self.wait_time = between(1000, 2000)
-            self.items = ["OLJCESPC7Z", "66VCHSJNUP", "1YMWWN1N4O", "L9ECAV7KIM", "2ZYFJ3GM2N", "0PUK6V6EV0", "LS4PSXUNUM", "9SIQT8TOJO", "6E92ZMYYFZ"]
+            self.wait_time = between(1, 2)
     
             @task
             def homepage(self):
@@ -97,9 +96,9 @@
 
             @task
             def view_items(self):
-              for elt in self.items:
+              for elt in ["OLJCESPC7Z", "66VCHSJNUP", "1YMWWN1N4O", "L9ECAV7KIM", "2ZYFJ3GM2N", "0PUK6V6EV0", "LS4PSXUNUM", "9SIQT8TOJO", "6E92ZMYYFZ"]:
                 self.client.get("/product/"+elt)
-                time.sleep(100)
+                time.sleep(0.1)
 
     - name: Starting Locust with Docker Compose
       command: docker-compose up -d --scale worker={{ worker_count }}
