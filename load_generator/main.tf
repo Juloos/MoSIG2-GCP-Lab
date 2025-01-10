@@ -20,7 +20,7 @@ variable "name" {
 
 variable "zone" {
   type        = string
-  default     = "europe-west5-b"
+  default     = "europe-west1-b"
 }
 
 variable "machine_type" {
