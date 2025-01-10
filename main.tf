@@ -18,48 +18,40 @@ variable "name" {
   default     = "online-boutique"
 }
 
-variable "region" {
+variable "zone" {
   type        = string
   default     = "europe-west6-a"
 }
 
 variable "machine_type" {
   type        = string
-  default     = "e2-standard-2"
-}
-
-variable "node_count" {
-  type        = number
-  default     = 4
+  default     = "f1-micro"
 }
 
 
 provider "google" {
-  project  = var.project_id
-  region   = var.region
+  project = var.project_id
+  zone    = var.zone
 }
 
-resource "google_container_cluster" "primary" {
-  name                     = var.name
-  location                 = var.region
-  deletion_protection      = false
-  # Original comment:
-  # We can't create a cluster with no node pool defined, but we want to only use
-  # separately managed node pools. So we create the smallest possible default
-  # node pool and immediately delete it.
-  remove_default_node_pool = true
-  initial_node_count       = 1
-}
+resource "google_compute_instance" "vm_instance" {
+  name         = var.name
+  count        = 1
+  machine_type = var.machine_type
 
-resource "google_container_node_pool" "primary_preemptible_nodes" {
-  name       = "preemptible-pool"
-  cluster    = google_container_cluster.primary.name
-  node_count = var.node_count
-
-  # Node pools are created and managed as separate resources to allow
-  # them to be added and removed without recreating the entier cluster.
-  node_config {
-    preemptible  = true
-    machine_type = var.machine_type
+  boot_disk {
+    initialize_params {
+      image = "locustio/locust"
+    }
   }
+
+  network_interface {
+    network = "default"
+    access_config {}
+  }
+}
+
+// A variable for extracting the external ip of the instance
+output "Access ip" {
+  value = "${google_compute_instance.vm_instance[0].network_interface.0.access_config.0.nat_ip}"
 }
