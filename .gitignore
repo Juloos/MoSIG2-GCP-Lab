@@ -1,4 +1,5 @@
 .vscode/
 microservices-demo/
 load_generator/host
+load_generator/.terraform*
 .username
