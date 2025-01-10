@@ -15,7 +15,7 @@ if [ -z "$(command -v terraform)" ]; then
     sudo apt update && sudo apt install terraform
 fi
 
-cd ..
+cd ../load_generator
 terraform init
 
 pip3 install ansible
