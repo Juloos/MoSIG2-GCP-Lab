@@ -54,7 +54,7 @@ resource "google_compute_instance" "vm_instance" {
 }
 
 resource "google_compute_firewall" "default" {
- name    = "load_generator_firewall"
+ name    = "load-generator-firewall"
  network = "default"
 
  allow {
