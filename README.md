@@ -32,12 +32,12 @@ PS: You may have to wait some time before launching the Locust deployement after
 # Base steps
 ## Step 1: Deploying the original application in GKE
 ## Step 2: Analyzing the provided configuration
-For the paymentservice in the `/kubernetes_manifest.yaml`:
+This service has the main goal of charging the credit card given by the user with the cart amount.
+When requested, it will try to charge one credit card (characterized by its number, CCV, expiration date and year) of an amount of money. Then, if the charging is a success, the charge response is a transaction.
 It is an important service, only letting 5 seconds of stuck state before termination. This also can be seen in the securityContext part, only limiting to one user ID, one user Group, and with the possibility to run it as non root.
 This non-root policy is also seen in the only container this service has, as it doesn't allow privilege escalation. It also allows only read operations on the root of the machine, making it even safer.
 This service, available through the 50051 port, will be using between 0.1 and 0.2 CPU, and between 64Mi and 128Mi of RAM. Does not seem to have any replicas whatsoever.
 
-Still to cover: `image: us-central1-docker.pkg.dev/google-samples/microservices-demo/paymentservice:v0.10.2`: say that it deploys a docker into the server, and understand the broad idea of what's inside if possible
 ## Step 3: Deploying the load generator on a local machine
 Done
 
