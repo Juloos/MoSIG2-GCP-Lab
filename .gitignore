@@ -1,2 +1,4 @@
 .vscode/
 microservices-demo/
+load_generator/host
+.username
