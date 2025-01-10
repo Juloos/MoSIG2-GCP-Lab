@@ -4,7 +4,8 @@
     worker_count: 4
   become: yes
   tasks:
-    - apt:
+    - name: Installing dependencies
+      apt:
         name: "{{ item }}"
         state: present
       loop:
@@ -13,35 +14,53 @@
         - curl
         - software-properties-common
 
-    - apt_key:
+    - name: Adding Docker's apt key 
+      apt_key:
         url: https://download.docker.com/linux/ubuntu/gpg
         state: present
 
-    - apt_repository:
+    - name: Adding Docker repository
+      apt_repository:
         repo: deb https://download.docker.com/linux/ubuntu focal stable
         state: present
 
-    - apt:
+    - name: Installing Docker
+      apt:
         name: docker-ce
         state: present
 
-    - get_url:
-        url: https://github.com/docker/compose/releases/download/v2.22.0/docker-compose-$(uname -s)-$(uname -m)
+    - name: Gathering information
+      shell: uname -s
+      register: unames
+
+    - name: Gathering information
+      shell: uname -m
+      register: unamem
+
+    - name: Installing Docker Compose
+      get_url:
+        url: "https://github.com/docker/compose/releases/download/v2.22.0/docker-compose-{{ unames.stdout }}-{{ unamem.stdout }}"
         dest: /usr/local/bin/docker-compose
         mode: '0755'
 
-    - name: Ensure Docker is running
+    - name: Ensuring Docker is running
       service:
         name: docker
         state: started
         enabled: yes
 
-    - docker_image:
+    - name: Pulling Locust image
+      docker_image:
         name: locustio/locust
         tag: latest
         source: pull
 
-    - name: Create Locust Docker Compose file
+    - name: Ensuring Locust directory exists
+      file:
+        path: /tmp/locust
+        state: directory
+
+    - name: Creating Locust Docker Compose file
       copy:
         dest: /tmp/locust/docker-compose.yml
         content: |
@@ -60,7 +79,7 @@
                 - ./:/mnt/locust
               command: -f /mnt/locust/locustfile.py --worker --master-host master
 
-    - name: Start Locust with Docker Compose
+    - name: Starting Locust with Docker Compose
       command: docker-compose up -d --scale worker={{ worker_count }}
       args:
         chdir: /tmp/locust
