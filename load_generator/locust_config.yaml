@@ -59,7 +59,7 @@
       file:
         path: /tmp/locust
         state: directory
-
+  
     - name: Creating Locust Docker Compose file
       copy:
         dest: /tmp/locust/docker-compose.yml
@@ -78,6 +78,28 @@
               volumes:
                 - ./:/mnt/locust
               command: -f /mnt/locust/locustfile.py --worker --master-host master
+
+
+    - name: Creating locustfile.py
+      copy:
+        dest: /tmp/locust/locustfile.py
+        content: |
+          import time
+          from locust import HttpUser, task, between
+
+          class QuickstartUser(HttpUser):
+            wait_time = between(100, 500)
+            items = ["OLJCESPC7Z", "66VCHSJNUP", "1YMWWN1N4O", "L9ECAV7KIM", "2ZYFJ3GM2N", "0PUK6V6EV0", "LS4PSXUNUM", "9SIQT8TOJO", "6E92ZMYYFZ"]
+    
+            @task
+            def homepage(self):
+              self.client.get("/")
+
+            @task
+            def view_items(self):
+              for elt in items:
+                self.client.get("/product/"+elt)
+                time.sleep(100)
 
     - name: Starting Locust with Docker Compose
       command: docker-compose up -d --scale worker={{ worker_count }}
