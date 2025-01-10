@@ -88,8 +88,8 @@
           from locust import HttpUser, task, between
 
           class QuickstartUser(HttpUser):
-            wait_time = between(100, 500)
-            items = ["OLJCESPC7Z", "66VCHSJNUP", "1YMWWN1N4O", "L9ECAV7KIM", "2ZYFJ3GM2N", "0PUK6V6EV0", "LS4PSXUNUM", "9SIQT8TOJO", "6E92ZMYYFZ"]
+            self.wait_time = between(100, 500)
+            self.items = ["OLJCESPC7Z", "66VCHSJNUP", "1YMWWN1N4O", "L9ECAV7KIM", "2ZYFJ3GM2N", "0PUK6V6EV0", "LS4PSXUNUM", "9SIQT8TOJO", "6E92ZMYYFZ"]
     
             @task
             def homepage(self):
@@ -97,7 +97,7 @@
 
             @task
             def view_items(self):
-              for elt in items:
+              for elt in self.items:
                 self.client.get("/product/"+elt)
                 time.sleep(100)
 
