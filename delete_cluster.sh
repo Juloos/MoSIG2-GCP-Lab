@@ -5,6 +5,3 @@ source ./.env
 cd microservices-demo
 
 gcloud container clusters delete online-boutique --region=${REGION}
-
-cd ..
-terraform destroy -auto-approve

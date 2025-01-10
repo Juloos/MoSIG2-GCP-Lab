@@ -41,7 +41,7 @@ resource "google_compute_instance" "vm_instance" {
 
   boot_disk {
     initialize_params {
-      image = "locustio/locust"
+      image = "ubuntu-os-cloud/ubuntu-2204-lts"
     }
   }
 
