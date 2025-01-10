@@ -88,7 +88,7 @@
           from locust import HttpUser, task, between
 
           class QuickstartUser(HttpUser):
-            self.wait_time = between(1, 2)
+            wait_time = between(1, 2)
     
             @task
             def homepage(self):
