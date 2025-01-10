@@ -27,6 +27,8 @@ You can also decide to change the number of Locust workers in the [locust_config
 
 Finally,don't forget to use `./destroy.sh` to clean up the resources you created, so you don't get debited for used up resources.
 
+PS: You may have to wait some time before launching the Locust deployement after the instance is created, otherwise the script will potentially try to connect to it before it is fully operational.
+
 # Base steps
 ## Step 1: Deploying the original application in GKE
 ## Step 2: Analyzing the provided configuration
