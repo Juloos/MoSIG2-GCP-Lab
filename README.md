@@ -4,6 +4,7 @@ Lab Assignment for the Cloud Computing course of MoSIG M2 2024
 # Table of contents
 - [MoSIG2-GCP-Lab](#mosig2-gcp-lab)
 - [Table of contents](#table-of-contents)
+- [Setup guide](#setup-guide)
 - [Base steps](#base-steps)
   - [Step 1: Deploying the original application in GKE](#step-1-deploying-the-original-application-in-gke)
   - [Step 2: Analyzing the provided configuration](#step-2-analyzing-the-provided-configuration)
@@ -14,7 +15,17 @@ Lab Assignment for the Cloud Computing course of MoSIG M2 2024
   - [Step 6: Performance evaluation](#step-6-performance-evaluation)
   - [Step 7: Canary releases](#step-7-canary-releases)
 - [Bonus steps](#bonus-steps)
+- [Bibliography](#bibliography)
 - [Credits](#credits)
+
+# Setup guide
+In order to run the provided scripts, you need to modify the [.env](.env) file with your own values, then do the same with the variables in the [main.tf](load_generator/main.tf) file. You can then run `chmod 700 *.sh load_generator/*.sh` to make the scripts executable, followed by `./setup.sh` to install the needed stuff. 
+
+You can then run any `create_[...].sh` combined with `deploy_[...].sh` to provision and configure the resources you want, which are either the online-boutique (cluster) or the seperate load generator (Locust). 
+
+You can also decide to change the number of Locust workers in the [locust_config.yaml](load_generator/locust_config.yaml) file, before deploying the load_generator. 
+
+Finally,don't forget to use `./destroy.sh` to clean up the resources you created, so you don't get debited for used up resources.
 
 # Base steps
 ## Step 1: Deploying the original application in GKE
