@@ -1,0 +1,66 @@
+---
+- hosts: locust_node
+  vars:
+    worker_count: 4
+  become: yes
+  tasks:
+    - apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - software-properties-common
+
+    - apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu focal stable
+        state: present
+
+    - apt:
+        name: docker-ce
+        state: present
+
+    - get_url:
+        url: https://github.com/docker/compose/releases/download/v2.22.0/docker-compose-$(uname -s)-$(uname -m)
+        dest: /usr/local/bin/docker-compose
+        mode: '0755'
+
+    - name: Ensure Docker is running
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - docker_image:
+        name: locustio/locust
+        tag: latest
+        source: pull
+
+    - name: Create Locust Docker Compose file
+      copy:
+        dest: /tmp/locust/docker-compose.yml
+        content: |
+          version: '3'
+          services:
+            master:
+              image: locustio/locust
+              ports:
+                - "8089:8089"
+              volumes:
+                - ./:/mnt/locust
+              command: -f /mnt/locust/locustfile.py --master -H http://master:8089
+            worker:
+              image: locustio/locust
+              volumes:
+                - ./:/mnt/locust
+              command: -f /mnt/locust/locustfile.py --worker --master-host master
+
+    - name: Start Locust with Docker Compose
+      command: docker-compose up -d --scale worker={{ worker_count }}
+      args:
+        chdir: /tmp/locust

@@ -15,12 +15,12 @@ variable "project_id" {
 
 variable "name" {
   type        = string
-  default     = "online-boutique"
+  default     = "online-boutique-load-generator"
 }
 
 variable "zone" {
   type        = string
-  default     = "europe-west6-a"
+  default     = "europe-west5-b"
 }
 
 variable "machine_type" {
