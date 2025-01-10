@@ -22,3 +22,4 @@ pip3 install ansible
 
 gcloud compute project-info add-metadata --metadata enable-oslogin=TRUE
 gcloud compute os-login ssh-keys add --key-file ~/.ssh/load_generator.key.pub --ttl 0
+yes | ssh-keygen -t rsa -f ~/.ssh/load_generator.key -C "ansible" -N ""
