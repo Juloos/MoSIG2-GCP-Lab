@@ -22,5 +22,6 @@ cd ..
 pip3 install ansible
 
 gcloud compute project-info add-metadata --metadata enable-oslogin=TRUE
-gcloud compute os-login ssh-keys add --key-file ~/.ssh/load_generator.key.pub --ttl 0 | grep "username: " | awk '{print $2}' > .username
+gcloud compute os-login ssh-keys add --key "ssh-rsa 0 DummyKey" --ttl 1 | grep "username: " | awk '{print $2}' > .username
 yes | ssh-keygen -t rsa -f ~/.ssh/load_generator.key -C "$(cat .username)" -N ""
+gcloud compute os-login ssh-keys add --key-file ~/.ssh/load_generator.key.pub --ttl 0
